@@ -12,7 +12,7 @@ public class Arcanoid extends JPanel implements ActionListener, KeyListener {
     boolean gameOver;
 
     int ballVelX = 5;
-    int ballVelY = 4;
+    int ballVelY = 5;
 
     int ballX = 390;
     int ballY = 100;
@@ -51,7 +51,7 @@ public class Arcanoid extends JPanel implements ActionListener, KeyListener {
 
         random = new Random();
 
-        gameStart = new Timer(10,this);
+        gameStart = new Timer(1,this);
         platform = new Platform(100,10);
         gameStart.start();
 
@@ -69,22 +69,22 @@ public class Arcanoid extends JPanel implements ActionListener, KeyListener {
         super.paintComponent(g);
         draw(g);
     }
-        public void draw(Graphics g){
+    public void draw(Graphics g){
         // platform
-            g.setColor(Color.white);
-            g.fillRect(CoordX, CoordY, 150 , 20);
+        g.setColor(Color.white);
+        g.fillRect(CoordX, CoordY, 150 , 20);
         //brick
-            g.setColor(Color.green);
-            g.fillRect(brickX,brickY,100,10);
+        g.setColor(Color.green);
+        g.fillRect(brickX,brickY,100,10);
         //ball
-            g.setColor(Color.white);
+        g.setColor(Color.white);
+        g.fillOval(ballX, ballY ,20,20);
+        if(gameOver){
+            g.setColor(Color.red);
+            g.fillRect(CoordX, CoordY, 150 , 20);
+            g.setColor(Color.red);
             g.fillOval(ballX, ballY ,20,20);
-            if(gameOver){
-                g.setColor(Color.red);
-                g.fillRect(CoordX, CoordY, 150 , 20);
-                g.setColor(Color.red);
-                g.fillOval(ballX, ballY ,20,20);
-            }
+        }
     }
     public void move(){
         if(CoordX >= 650){
@@ -96,21 +96,21 @@ public class Arcanoid extends JPanel implements ActionListener, KeyListener {
             CoordX = 1;
         }
         CoordX+=VelocityX;
-        if(ballX >= 790 || ballX <= 10) {
+        if(ballX >= 780 || ballX <= 0) {
             ballVelX*=-1;
         }
-        if(ballY <= 10) {
+        if(ballY <= 0) {
             ballVelY*=-1;
         }
-        if(ballY >= 790){
+        if(ballY >= 780){
             gameOver = true;
             System.out.println("Game Over");
             System.out.println("Score: "+ score);
         }
-        if((ballY+10 >= CoordY && ballY - 10 <= CoordY) && (ballX >= CoordX && ballX<=CoordX+150)){
+        if((ballY+20>= CoordY && ballY<=CoordY) && (ballX >= CoordX && ballX<=CoordX+150)){
             ballVelY*=-1;
         }
-        if((ballY+10>=brickY && ballY-10<=brickY) && (ballX >= brickX && ballX<=brickX+100)) {
+        if((ballY+20>=brickY && ballY<=brickY) && (ballX >= brickX && ballX<=brickX+100)) {
             ballVelY*=-1;
             score++;
             placeBrick();
@@ -125,6 +125,16 @@ public class Arcanoid extends JPanel implements ActionListener, KeyListener {
         }
         else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
             VelocityX = 5;
+        }
+        // уменьшение или возрастание скорости мячика
+        if(e.getKeyCode()==KeyEvent.VK_UP){
+            ballVelY = (ballVelY/Math.abs(ballVelY))*(Math.abs(ballVelY)+1);
+            ballVelX = (ballVelX/Math.abs(ballVelX))*(Math.abs(ballVelX)+1);
+        }
+        else if(e.getKeyCode()==KeyEvent.VK_DOWN && Math.abs(ballVelY)>1 ){
+            ballVelY = (ballVelY/Math.abs(ballVelY))*(Math.abs(ballVelY)-1);
+            ballVelX = (ballVelX/Math.abs(ballVelX))*(Math.abs(ballVelX)-1);
+
         }
 
     }
@@ -152,3 +162,4 @@ public class Arcanoid extends JPanel implements ActionListener, KeyListener {
 
     }
 }
+
